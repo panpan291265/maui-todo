@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:ToDo.Views"
+             x:Class="ToDo.Views.ToDoPage"
+             Title="ToDos">
+    <StackLayout Padding="15">
+        <!--<Button
+            Margin="0, 20, 0, 30"
+            Text="Clear All" 
+            WidthRequest="200"
+            Command="{Binding ClearAllCommand}"
+            />-->
+        <Label
+            Margin="0, 20, 0, 30"
+            HorizontalTextAlignment="Start"
+            TextColor="DimGray"
+            Text="{Binding ServiceName}"
+            />
+
+        <Label
+            HorizontalTextAlignment="Start"
+            TextColor="DimGray"
+            Text="ToDo Title" />
+        <Entry
+            Text="{Binding Title}"
+            TextColor="Black"
+            PlaceholderColor="DimGray"
+            Placeholder="Type todo title"/>
+        <Label
+            HorizontalTextAlignment="Start"
+            TextColor="DimGray"
+            Text="ToDo Description" />
+        <Entry
+            Text="{Binding Description}"
+            TextColor="Black"
+            PlaceholderColor="DimGray"
+            Placeholder="Type todo description"/>
+        <Button
+            Text="Add ToDo" 
+            WidthRequest="200"
+            IsEnabled="{Binding CanCreateToDo}"
+            Command="{Binding CreateToDoCommand}"
+            />
+
+        <Label
+            HorizontalTextAlignment="Center"
+            TextColor="Black"
+            Text="ToDos List" 
+            Margin="0, 30, 0, 0"
+            FontSize="Medium"
+            />
+        <HorizontalStackLayout VerticalOptions="Center">
+            <CheckBox
+                VerticalOptions="Center"
+                IsChecked="{Binding IncludeDone}"
+                />
+            <Label
+                HorizontalTextAlignment="Start"
+                VerticalTextAlignment="Center"
+                TextColor="Black"
+                Text="Include completed todos"
+                />
+        </HorizontalStackLayout>
+        <CollectionView 
+            ItemsSource="{Binding ToDos}"
+            VerticalOptions="FillAndExpand">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <views:ToDoItemTemplate />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+    </StackLayout>
+</ContentPage>
