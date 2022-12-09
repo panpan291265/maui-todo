@@ -11,11 +11,24 @@ public class ToDoInMemoryService : IToDoService
         todos.Clear();
     }
 
-    public async Task<ICollection<ToDoModel>> GetToDos(bool includeDone = false)
+    public async Task<ICollection<ToDoModel>> GetToDos(string searchTerm = "", bool includeDone = false)
     {
         var todos = this.todos;
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            todos = todos.Where(x =>
+            {
+                if (x.Title?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true)
+                    return true;
+                if (x.Description?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true)
+                    return true;
+                return false;
+            }).ToList();
+        }
         if (!includeDone)
+        {
             todos = todos.Where(x => !x.Done).ToList();
+        }
         return await Task.FromResult(todos);
     }
 

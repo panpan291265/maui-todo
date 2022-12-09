@@ -17,12 +17,9 @@ public class ToDoSqLiteService : IToDoService
         this.db.DropDatabase();
     }
 
-    public async Task<ICollection<ToDoModel>> GetToDos(bool includeDone = false)
+    public async Task<ICollection<ToDoModel>> GetToDos(string searchTerm = "", bool includeDone = false)
     {
-        if (!includeDone)
-            return await db.GetToDosNotDone();
-        else
-            return await db.GetToDos();
+        return await db.GetToDos(searchTerm: searchTerm, includeDone: includeDone);
     }
 
     public async Task<ToDoModel> FindToDo(string id)

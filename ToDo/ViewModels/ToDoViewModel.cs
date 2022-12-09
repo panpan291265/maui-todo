@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ToDo.Models;
 using ToDo.Services;
+using static SQLite.SQLite3;
 
 namespace ToDo.ViewModels;
 
@@ -25,23 +27,41 @@ public partial class ToDoViewModel : BaseViewModel
     private string description = string.Empty;
 
     [ObservableProperty]
+    private string searchTerm = string.Empty;
+
+    [ObservableProperty]
     private bool includeDone = false;
 
     [ObservableProperty]
-    private ICollection<ToDoModel> toDos = new List<ToDoModel>();
+    private ObservableCollection<ToDoItemViewModel> toDoItems = new ObservableCollection<ToDoItemViewModel>();
 
     public bool CanCreateToDo => !string.IsNullOrWhiteSpace(Title);
 
+    /*
+    protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(IncludeDone))
+        {
+            LoadToDos();
+        }
+    }
+    */
+
     private async Task LoadToDos()
     {
-        ToDos.Clear();
+        ToDoItems.Clear();
         try
         {
             Processing = true;
-            ToDos = await this.service.GetToDos(includeDone: IncludeDone);
+            var todoItems = await this.service.GetToDos(searchTerm: SearchTerm, includeDone: IncludeDone);
+            ToDoItems = new ObservableCollection<ToDoItemViewModel>(
+                todoItems.Select(x => new ToDoItemViewModel(x))
+            );
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Load ToDos", "An unexpected error occured!", "Ok");
         }
         finally 
@@ -50,13 +70,10 @@ public partial class ToDoViewModel : BaseViewModel
         }
     }
 
-    protected override async void OnPropertyChanged(PropertyChangedEventArgs e)
+    [RelayCommand]
+    private async void SearchToDos()
     {
-        base.OnPropertyChanged(e);
-        if (e.PropertyName == nameof(IncludeDone))
-        {
-            LoadToDos();
-        }
+        await LoadToDos();
     }
 
     [RelayCommand]
@@ -75,6 +92,7 @@ public partial class ToDoViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Create ToDo", "An unexpected error occured!", "Ok");
         }
     }
@@ -110,13 +128,13 @@ public partial class ToDoViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task SaveToDo(ToDoModel todo)
+    private async Task SaveToDo(ToDoItemViewModel todoItem)
     {
         try
         {
             await Task.Run(() =>
             {
-                service.SaveToDo(todo);
+                service.SaveToDo(todoItem?.ToDo);
             });
             await LoadToDos();
         }
@@ -127,17 +145,17 @@ public partial class ToDoViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task RemoveToDo(ToDoModel todo)
+    private async Task RemoveToDo(ToDoItemViewModel todoItem)
     {
-        if (todo == null) return;
-        bool confirm = await Shell.Current.DisplayAlert("ToDos", $"Are you sure you want to remove '{todo.Title}'?", "Yes", "No");
+        if (todoItem?.ToDo == null) return;
+        bool confirm = await Shell.Current.DisplayAlert("ToDos", $"Are you sure you want to remove '{todoItem.ToDo.Title}'?", "Yes", "No");
         if (!confirm)
             return;
         try
         {
             await Task.Run(() =>
             {
-                service.RemoveToDo(todo);
+                service.RemoveToDo(todoItem.ToDo);
             });
             await LoadToDos();
         }

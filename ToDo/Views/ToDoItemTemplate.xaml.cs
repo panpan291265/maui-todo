@@ -15,10 +15,10 @@ public partial class ToDoItemTemplate : ContentView
     {
         // TODO => This is the wrong way to do it, try to avoid it if possible !!!
         var checkbox = sender as CheckBox;
-        var todo = checkbox?.BindingContext as ToDoModel;
+        var todoItem = checkbox?.BindingContext as ToDoItemViewModel;
         var vm = checkbox?.Parent?.Parent?.Parent?.Parent?.Parent?.Parent?.BindingContext as ToDoViewModel;
-        if (vm != null && todo != null)
-            vm.SaveToDoCommand.Execute(todo);
+        if (vm != null && todoItem != null)
+            vm.SaveToDoCommand.Execute(todoItem);
     }
 
     /*

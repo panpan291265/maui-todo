@@ -1,32 +1,30 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel;
 using ToDo.Models;
-using ToDo.Services;
 
 namespace ToDo.ViewModels;
 
 public partial class ToDoItemViewModel : BaseViewModel
 {
-    private IToDoService service;
-    private ToDoModel todo;
+    [ObservableProperty]
+    public ToDoModel toDo;
     
-    public ToDoItemViewModel(IToDoService service)
+    public ToDoItemViewModel()
     {
-        this.service = service;
     }
 
-    [RelayCommand]
-    private async Task RemoveToDo()
+    public ToDoItemViewModel(ToDoModel todo)
     {
-        /*
-        try
+        ToDo = todo;
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        System.Diagnostics.Debug.WriteLine($"ToDoItemViewModel => PropertyChanged: e.PropertyName");
+        if (e.PropertyName == nameof(ToDo.Done))
         {
-            await service.RemoveToDo(todo);
-        } catch (Exception ex)
-        {
-            await Shell.Current.DisplayAlert("Remove ToDo", "An unexpected error occured!", "Ok");
+            System.Diagnostics.Debug.WriteLine("ToDoItemViewModel => ToDo Done Changed!");
         }
-        */
-        await Shell.Current.DisplayAlert("Remove ToDo", "Should remove todo item!", "Ok");
     }
 }

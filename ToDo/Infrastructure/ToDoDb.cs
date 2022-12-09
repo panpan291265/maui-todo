@@ -34,23 +34,29 @@ public class ToDoDb
         var result = await Database.CreateTableAsync<ToDoModel>();
     }
 
-    public async Task<List<ToDoModel>> GetToDos()
+    public async Task<List<ToDoModel>> GetToDos(string searchTerm = "", bool includeDone = false)
     {
         await Init();
-        var todos = await Database.Table<ToDoModel>().ToListAsync();
+        var query = Database.Table<ToDoModel>();
+        if (!includeDone)
+        {
+            query = query.Where(x => !x.Done);
+        }
+        var todos = await query.ToListAsync();
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            todos = todos.Where(x =>
+            {
+                if (x.Title?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true)
+                    return true;
+                if (x.Description?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true)
+                    return true;
+                return false;
+            }).ToList();
+        }
         return todos;
     }
-
-    public async Task<List<ToDoModel>> GetToDosNotDone()
-    {
-        await Init();
-        var todos = await Database.Table<ToDoModel>().Where(x => !x.Done).ToListAsync();
-        return todos;
-
-        // SQL queries are also possible
-        //return await Database.QueryAsync<ToDoModel>("SELECT * FROM [ToDoModel] WHERE [Done] = 0");
-    }
-
+    
     public async Task<ToDoModel> GetToDo(string id)
     {
         await Init();

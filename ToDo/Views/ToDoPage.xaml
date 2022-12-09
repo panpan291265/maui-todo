@@ -11,59 +11,134 @@
             WidthRequest="200"
             Command="{Binding ClearAllCommand}"
             />-->
-        <Label
+        <!--<Label
             Margin="0, 20, 0, 30"
             HorizontalTextAlignment="Start"
             TextColor="DimGray"
             Text="{Binding ServiceName}"
-            />
+            />-->
 
-        <Label
-            HorizontalTextAlignment="Start"
-            TextColor="DimGray"
-            Text="ToDo Title" />
-        <Entry
-            Text="{Binding Title}"
-            TextColor="Black"
-            PlaceholderColor="DimGray"
-            Placeholder="Type todo title"/>
-        <Label
-            HorizontalTextAlignment="Start"
-            TextColor="DimGray"
-            Text="ToDo Description" />
-        <Entry
-            Text="{Binding Description}"
-            TextColor="Black"
-            PlaceholderColor="DimGray"
-            Placeholder="Type todo description"/>
-        <Button
-            Text="Add ToDo" 
-            WidthRequest="200"
-            IsEnabled="{Binding CanCreateToDo}"
-            Command="{Binding CreateToDoCommand}"
-            />
+        <Frame 
+            Margin="4, 8"
+            Padding="20, 15"
+            BorderColor="#fafafa"
+            IsClippedToBounds="True"
+            HasShadow="True"
+            >
+            <StackLayout>
+                <Label
+                    HorizontalTextAlignment="Start"
+                    TextColor="DimGray"
+                    Text="Add New ToDo" 
+                    FontSize="Medium"
+                    Margin="0, 0, 10, 0"
+                    />
+                <Entry
+                    Text="{Binding Title}"
+                    TextColor="Black"
+                    PlaceholderColor="DimGray"
+                    Placeholder="Type todo title"/>
+                <Entry
+                    Text="{Binding Description}"
+                    TextColor="Black"
+                    PlaceholderColor="DimGray"
+                    Placeholder="Type todo description"/>
+                <Button
+                    Text="Add" 
+                    WidthRequest="100"
+                    HeightRequest="40"
+                    ImageSource="plus_circle.png"
+                    BackgroundColor="LightGray"
+                    BorderColor="DarkGray"
+                    TextColor="Black"
+                    BorderWidth="1"
+                    IsEnabled="{Binding CanCreateToDo}"
+                    Command="{Binding CreateToDoCommand}"
+                    />
+            </StackLayout>
+        </Frame>
 
-        <Label
-            HorizontalTextAlignment="Center"
-            TextColor="Black"
-            Text="ToDos List" 
-            Margin="0, 30, 0, 0"
-            FontSize="Medium"
-            />
-        <HorizontalStackLayout VerticalOptions="Center">
-            <CheckBox
+        <Frame 
+            Margin="4, 8"
+            Padding="20, 15"
+            BorderColor="#fafafa"
+            IsClippedToBounds="True"
+            HasShadow="True"
+            >
+            <Grid 
+                Margin="0"
+                Padding="0"
+                HorizontalOptions="Center"
                 VerticalOptions="Center"
-                IsChecked="{Binding IncludeDone}"
-                />
-            <Label
-                HorizontalTextAlignment="Start"
-                VerticalTextAlignment="Center"
-                TextColor="Black"
-                Text="Include completed todos"
-                />
-        </HorizontalStackLayout>
+                >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    HorizontalTextAlignment="Start"
+                    TextColor="DimGray"
+                    Text="Search ToDos" 
+                    FontSize="Medium"
+                    Margin="0, 0, 10, 0"
+                    />
+                <Entry
+                    Margin="5, 0"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Text="{Binding SearchTerm}"
+                    Placeholder="Search todo items"
+                    WidthRequest="160"
+                    HorizontalOptions="FillAndExpand"
+                    ClearButtonVisibility="WhileEditing"
+                    />
+                <HorizontalStackLayout
+                    Margin="5, 0"
+                    Padding="0"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    WidthRequest="160"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center"
+                    >
+                    <CheckBox
+                        VerticalOptions="Center"
+                        IsChecked="{Binding IncludeDone}"
+                        />
+                    <Label
+                        HorizontalTextAlignment="Start"
+                        VerticalTextAlignment="Center"
+                        TextColor="Black"
+                        Text="Include done"
+                        />
+                </HorizontalStackLayout>
+                <Button
+                    Margin="15, 0"
+                    Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Text="Search" 
+                    WidthRequest="100"
+                    HeightRequest="40"
+                    ImageSource="search.png"
+                    BackgroundColor="LightGray"
+                    BorderColor="DarkGray"
+                    TextColor="Black"
+                    BorderWidth="1"
+                    Command="{Binding SearchToDosCommand}"
+                    />
+            </Grid>
+        </Frame>
         <CollectionView 
-            ItemsSource="{Binding ToDos}"
+            ItemsSource="{Binding ToDoItems}"
             VerticalOptions="FillAndExpand">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
