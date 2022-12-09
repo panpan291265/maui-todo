@@ -66,7 +66,7 @@
                 >
                 <Line 
                     X2="999999"
-                    StrokeThickness="0.5"
+                    StrokeThickness="0.25"
                     Stroke="#afafaf"
                     />
             </StackLayout>

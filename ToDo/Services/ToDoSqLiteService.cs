@@ -15,6 +15,7 @@ public class ToDoSqLiteService : IToDoService
     public async Task ClearAll()
     {
         this.db.DropDatabase();
+        await Task.CompletedTask;
     }
 
     public async Task<ICollection<ToDoModel>> GetToDos(string searchTerm = "", bool includeDone = false)

@@ -50,9 +50,12 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\arrow_clockwise.svg" />
+	  <None Remove="Resources\Images\chevron_down.svg" />
+	  <None Remove="Resources\Images\chevron_up.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="3.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />

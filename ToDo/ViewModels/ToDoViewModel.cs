@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,7 +16,7 @@ public partial class ToDoViewModel : BaseViewModel
     public ToDoViewModel(IToDoService service)
     {
         this.service = service;
-        LoadToDos();
+        Task.Run(() => LoadToDos());
     }
 
     public string ServiceName => service?.GetType().Name.ToString() ?? "";
@@ -34,6 +35,9 @@ public partial class ToDoViewModel : BaseViewModel
 
     [ObservableProperty]
     private ObservableCollection<ToDoItemViewModel> toDoItems = new ObservableCollection<ToDoItemViewModel>();
+
+    [ObservableProperty]
+    private bool noToDoItems = false;
 
     public bool CanCreateToDo => !string.IsNullOrWhiteSpace(Title);
 
@@ -66,7 +70,8 @@ public partial class ToDoViewModel : BaseViewModel
         }
         finally 
         { 
-            Processing = false; 
+            Processing = false;
+            NoToDoItems = ToDoItems.Count <= 0;
         }
     }
 
@@ -77,7 +82,7 @@ public partial class ToDoViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task ClearAll()
+    private async void ClearAll()
     {
         bool confirm = await Shell.Current.DisplayAlert("ToDos", "Are you sure you want to clear all todos?", "Yes", "No");
         if (!confirm)
@@ -98,7 +103,7 @@ public partial class ToDoViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task CreateToDo()
+    private async void CreateToDo()
     {
         if (string.IsNullOrWhiteSpace(Title))
         {
@@ -119,16 +124,18 @@ public partial class ToDoViewModel : BaseViewModel
             });
             Title = string.Empty;
             Description = string.Empty;
+            Toast.Make($"ToDo '{todo.Title}' added successfully").Show();
             await LoadToDos();
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Create ToDo", "An unexpected error occured!", "Ok");
         }
     }
 
     [RelayCommand]
-    private async Task SaveToDo(ToDoItemViewModel todoItem)
+    private async void SaveToDo(ToDoItemViewModel todoItem)
     {
         try
         {
@@ -136,16 +143,18 @@ public partial class ToDoViewModel : BaseViewModel
             {
                 service.SaveToDo(todoItem?.ToDo);
             });
+            Toast.Make($"ToDo '{todoItem?.ToDo?.Title}' saved successfully").Show();
             await LoadToDos();
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Save ToDo", "An unexpected error occured!", "Ok");
         }
     }
 
     [RelayCommand]
-    private async Task RemoveToDo(ToDoItemViewModel todoItem)
+    private async void RemoveToDo(ToDoItemViewModel todoItem)
     {
         if (todoItem?.ToDo == null) return;
         bool confirm = await Shell.Current.DisplayAlert("ToDos", $"Are you sure you want to remove '{todoItem.ToDo.Title}'?", "Yes", "No");
@@ -157,10 +166,12 @@ public partial class ToDoViewModel : BaseViewModel
             {
                 service.RemoveToDo(todoItem.ToDo);
             });
+            Toast.Make($"ToDo '{todoItem?.ToDo?.Title}' removed successfully").Show();
             await LoadToDos();
         }
         catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Remove ToDo", "An unexpected error occured!", "Ok");
         }
     }

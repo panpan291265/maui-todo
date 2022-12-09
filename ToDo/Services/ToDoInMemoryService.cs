@@ -9,6 +9,7 @@ public class ToDoInMemoryService : IToDoService
     public async Task ClearAll()
     {
         todos.Clear();
+        await Task.CompletedTask;
     }
 
     public async Task<ICollection<ToDoModel>> GetToDos(string searchTerm = "", bool includeDone = false)

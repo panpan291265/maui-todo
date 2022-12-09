@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xctviews="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
              xmlns:views="clr-namespace:ToDo.Views"
              x:Class="ToDo.Views.ToDoPage"
              Title="ToDos">
@@ -26,35 +27,65 @@
             HasShadow="True"
             >
             <StackLayout>
-                <Label
-                    HorizontalTextAlignment="Start"
-                    TextColor="DimGray"
-                    Text="Add New ToDo" 
-                    FontSize="Medium"
-                    Margin="0, 0, 10, 0"
-                    />
-                <Entry
-                    Text="{Binding Title}"
-                    TextColor="Black"
-                    PlaceholderColor="DimGray"
-                    Placeholder="Type todo title"/>
-                <Entry
-                    Text="{Binding Description}"
-                    TextColor="Black"
-                    PlaceholderColor="DimGray"
-                    Placeholder="Type todo description"/>
-                <Button
-                    Text="Add" 
-                    WidthRequest="100"
-                    HeightRequest="40"
-                    ImageSource="plus_circle.png"
-                    BackgroundColor="LightGray"
-                    BorderColor="DarkGray"
-                    TextColor="Black"
-                    BorderWidth="1"
-                    IsEnabled="{Binding CanCreateToDo}"
-                    Command="{Binding CreateToDoCommand}"
-                    />
+                <xctviews:Expander>
+                    <xctviews:Expander.Header>
+                        <Grid>
+                            <HorizontalStackLayout>
+                                <Image
+                                    Margin="5, 0"
+                                    Source="plus_circle.png"
+                                    />
+                                <Label
+                                    Margin="5, 0"
+                                    HorizontalTextAlignment="Start"
+                                    TextColor="DimGray"
+                                    Text="Add New ToDo" 
+                                    FontSize="Medium"
+                                    FontAttributes="Bold"
+                                    />
+                            </HorizontalStackLayout>
+                            <Image Source="chevron_down.png"
+                                HorizontalOptions="End"
+                                VerticalOptions="Start"
+                                >
+                                <Image.Triggers>
+                                    <DataTrigger 
+                                    TargetType="Image"
+                                    Binding="{Binding Source={RelativeSource AncestorType={x:Type xctviews:Expander}}, Path=IsExpanded}"
+                                    Value="True">
+                                        <Setter 
+                                            Property="Source"
+                                            Value="chevron_up.png" />
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                        </Grid>
+                    </xctviews:Expander.Header>
+                    <VerticalStackLayout>
+                        <Entry
+                            Text="{Binding Title}"
+                            TextColor="Black"
+                            PlaceholderColor="DimGray"
+                            Placeholder="Type todo title"/>
+                        <Entry
+                            Text="{Binding Description}"
+                            TextColor="Black"
+                            PlaceholderColor="DimGray"
+                            Placeholder="Type todo description"/>
+                        <Button
+                            Text="Add" 
+                            WidthRequest="100"
+                            HeightRequest="40"
+                            ImageSource="plus_circle.png"
+                            BackgroundColor="LightGray"
+                            BorderColor="DarkGray"
+                            TextColor="Black"
+                            BorderWidth="1"
+                            IsEnabled="{Binding CanCreateToDo}"
+                            Command="{Binding CreateToDoCommand}"
+                            />
+                    </VerticalStackLayout>
+                </xctviews:Expander>
             </StackLayout>
         </Frame>
 
@@ -65,86 +96,127 @@
             IsClippedToBounds="True"
             HasShadow="True"
             >
-            <Grid 
-                Margin="0"
-                Padding="0"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="40" />
-                    <RowDefinition Height="40" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Label
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    HorizontalTextAlignment="Start"
-                    TextColor="DimGray"
-                    Text="Search ToDos" 
-                    FontSize="Medium"
-                    Margin="0, 0, 10, 0"
-                    />
-                <Entry
-                    Margin="5, 0"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Text="{Binding SearchTerm}"
-                    Placeholder="Search todo items"
-                    WidthRequest="160"
-                    HorizontalOptions="FillAndExpand"
-                    ClearButtonVisibility="WhileEditing"
-                    />
-                <HorizontalStackLayout
-                    Margin="5, 0"
+            <xctviews:Expander>
+                <xctviews:Expander.Header>
+                    <Grid>
+                        <HorizontalStackLayout>
+                            <Image
+                                Margin="5, 0"
+                                Source="search.png"
+                                />
+                            <Label
+                                Margin="5, 0"
+                                HorizontalTextAlignment="Start"
+                                TextColor="DimGray"
+                                Text="Search ToDos" 
+                                FontSize="Medium"
+                                FontAttributes="Bold"
+                                />
+                        </HorizontalStackLayout>
+                        <Image Source="chevron_down.png"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            >
+                            <Image.Triggers>
+                                <DataTrigger 
+                                    TargetType="Image"
+                                    Binding="{Binding Source={RelativeSource AncestorType={x:Type xctviews:Expander}}, Path=IsExpanded}"
+                                    Value="True">
+                                    <Setter 
+                                            Property="Source"
+                                            Value="chevron_up.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
+                    </Grid>
+                </xctviews:Expander.Header>
+                <Grid 
+                    Margin="0"
                     Padding="0"
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    WidthRequest="160"
-                    HorizontalOptions="FillAndExpand"
+                    HorizontalOptions="Center"
                     VerticalOptions="Center"
                     >
-                    <CheckBox
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Entry
+                        Margin="5, 0"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="{Binding SearchTerm}"
+                        Placeholder="Search todo items"
+                        WidthRequest="160"
+                        HorizontalOptions="FillAndExpand"
+                        ClearButtonVisibility="WhileEditing"
+                        />
+                    <HorizontalStackLayout
+                        Margin="5, 0"
+                        Padding="0"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        WidthRequest="160"
+                        HorizontalOptions="FillAndExpand"
                         VerticalOptions="Center"
-                        IsChecked="{Binding IncludeDone}"
-                        />
-                    <Label
-                        HorizontalTextAlignment="Start"
-                        VerticalTextAlignment="Center"
+                        >
+                        <CheckBox
+                            VerticalOptions="Center"
+                            IsChecked="{Binding IncludeDone}"
+                            />
+                        <Label
+                            HorizontalTextAlignment="Start"
+                            VerticalTextAlignment="Center"
+                            TextColor="Black"
+                            Text="Include done"
+                            />
+                    </HorizontalStackLayout>
+                    <Button
+                        Margin="15, 0"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="1"
+                        Text="Search" 
+                        WidthRequest="100"
+                        HeightRequest="40"
+                        ImageSource="search.png"
+                        BackgroundColor="LightGray"
+                        BorderColor="DarkGray"
                         TextColor="Black"
-                        Text="Include done"
+                        BorderWidth="1"
+                        Command="{Binding SearchToDosCommand}"
                         />
-                </HorizontalStackLayout>
-                <Button
-                    Margin="15, 0"
-                    Grid.Row="1"
-                    Grid.RowSpan="2"
-                    Grid.Column="1"
-                    Text="Search" 
-                    WidthRequest="100"
-                    HeightRequest="40"
-                    ImageSource="search.png"
-                    BackgroundColor="LightGray"
-                    BorderColor="DarkGray"
-                    TextColor="Black"
-                    BorderWidth="1"
-                    Command="{Binding SearchToDosCommand}"
-                    />
-            </Grid>
+                </Grid>
+            </xctviews:Expander>
+        </Frame>
+        <Frame 
+            Margin="4, 8"
+            Padding="20, 15"
+            BorderColor="#fafafa"
+            IsClippedToBounds="True"
+            HasShadow="True"
+            IsVisible="{Binding NoToDoItems}"
+            >
+            <Label
+                Margin="0"
+                HorizontalTextAlignment="Center"
+                TextColor="DarkBlue"
+                Text="No ToDo Items Found!" 
+                FontSize="Medium"
+                FontAttributes="Bold"
+                />
         </Frame>
         <CollectionView 
             ItemsSource="{Binding ToDoItems}"
             VerticalOptions="FillAndExpand">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <views:ToDoItemTemplate />
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <views:ToDoItemTemplate />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </StackLayout>
 </ContentPage>
